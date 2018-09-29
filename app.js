@@ -90,7 +90,7 @@ app.post("/callAVA", function (req,res){
   let out='';
   //var str=req.body.queryResult.parameters.searchText;
   if (req.body.queryResult.parameters.searchText) {
-    strRicerca=querystring.escape(req.body.queryResult.parameters,searchText);
+    strRicerca=querystring.escape(req.body.queryResult.parameters.searchText);
     options.path+=strRicerca+'&user=&pwd=&ava=FarmaInfoBot';
     out=callAVA(strRicerca);
     if (out){

@@ -45,8 +45,8 @@ app.get("/", function (req, res){
     //  var min=parseInt(req.body.min); req.body.result.parameters.
       // var max=parseInt(req.body.max);
       /*  adattare il codice per DG!!!!!*/
-      var min=parseInt(req.body.result.parameters.min);
-      var max=parseInt(req.body.result.parameters.max);
+      var min=parseInt(req.body.queryResult.parameters.min);
+      var max=parseInt(req.body.queryResult.parameters.max);
     if (isNaN(min) || isNaN(max)) {
       res.status(400);
       res.json({ error: "Bad request." });

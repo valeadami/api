@@ -59,7 +59,7 @@ app.get("/", function (req, res){
      // res.json({ result: result });
      res.json({
             fulfillmentText: "il numero e' " + result,
-            data: null
+            payload: null
      })
     });  
 

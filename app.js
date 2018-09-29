@@ -88,12 +88,13 @@ app.get("/", function (req, res){
 app.post("/callAVA", function (req,res){
   let strRicerca='';
   let out='';
-  //var str=req.body.queryResult.parameters.searchText;
-  if (req.body.queryResult.parameters.searchText) {
-    strRicerca=querystring.escape(req.body.queryResult.parameters.searchText);
+  var str= req.body.queryResult.parameters.searchText; //req.body.searchText;//req.body.queryResult.parameters.searchText;
+  if (str) {
+    strRicerca=querystring.escape(str);
     options.path+=strRicerca+'&user=&pwd=&ava=FarmaInfoBot';
-    out=callAVA(strRicerca);
+   /*out=callAVA(strRicerca);
     if (out){
+      console.log("SONO IN OUT QUINDI CALLAVA OK");
       res.status(200).json({
         fulfillmentText: "OUTPUT: " +out,
         payload: null
@@ -113,12 +114,23 @@ app.post("/callAVA", function (req,res){
   }
   
 });
+*/
+callAVA( strRicerca).then((strOutput)=> {
+       
+  return res.json({ 'fulfillmentText': strOutput }); 
+ 
+}).catch((error) => {
+  //console.log('Si è verificato errore : ' +error);
+ return res.json({ 'fulfillmentText': 'errore: ' + error.message});
 
+});
+ }
+});
 /* *************inizio CALL AVA * */
 
 
 function callAVA(stringaRicerca) {
-  
+  return new Promise((resolve, reject) => {
     let data = '';
     let strOutput='';
     const req = https.request(options, (res) => {
@@ -137,7 +149,7 @@ function callAVA(stringaRicerca) {
             strOutput=c.output[0].output; 
             //pulisco tag HTML       
             strOutput=strOutput.replace(/(<\/p>|<p>|<b>|<\/b>|<br>|<\/br>|<strong>|<\/strong>|<div>|<\/div>|<ul>|<li>|<\/ul>|<\/li>|&nbsp;|)/gi, '');
-           
+            //return strOutput;
             //CONTROLLO SE AVASESSION E' VUOTA, SE NO CONCATENA SEMPRE le sessioni
             /* if (avaSession ==='' ){
                  console.log('se avaSession è vuota ...');
@@ -156,8 +168,8 @@ function callAVA(stringaRicerca) {
            */
             
             /* fino a qui */
-          
-            return strOutput;
+            resolve(strOutput); 
+           
           
     });
     res.on('end', () => {
@@ -173,14 +185,14 @@ function callAVA(stringaRicerca) {
   req.on('error', (e) => {
     console.error(`problem with request: ${e.message}`);
     strOutput="si è verificato errore " + e.message;
-    return strOutput;
+   // return strOutput;
   });
   
   // write data to request body
   
   req.write(postData);
   req.end();
-    
+});
 } 
 /*****FINE CALL AVA */
 

@@ -62,7 +62,14 @@ app.get("/", function (req, res){
             payload: null
      })
     });  
+//funzione callAVA
+app.post("/callAVA", function (req,res){
+  res.json({
+    fulfillmentText: "sono nella callAVA",
+    payload: null
+})
 
+});
 app.listen(process.env.PORT || 3000, function() {
     console.log("App started on port 3000");
   });

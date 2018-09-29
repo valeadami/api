@@ -64,11 +64,18 @@ app.get("/", function (req, res){
     });  
 //funzione callAVA
 app.post("/callAVA", function (req,res){
-  res.json({
-    fulfillmentText: "sono nella callAVA",
-    payload: null
-})
-
+  var str=req.body.queryResult.parameters.searchText;
+  if (str) {
+    res.status(200).json({
+      fulfillmentText: "ECHO: " +str,
+      payload: null
+      });
+    } else {
+      res.json({
+        fulfillmentText: "non trovo il parametro ",
+        payload: null
+      })
+    }
 });
 app.listen(process.env.PORT || 3000, function() {
     console.log("App started on port 3000");

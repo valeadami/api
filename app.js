@@ -58,8 +58,7 @@ app.get("/", function (req, res){
     res.setHeader('Content-Type', 'application/json');
      // res.json({ result: result });
      res.json({
-      speech: "il numero e' " + result,
-            displayText: "il numero e' " + result,
+            fulfillmentText: "il numero e' " + result,
             data: null
      })
     });  

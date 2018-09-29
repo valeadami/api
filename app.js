@@ -2,6 +2,7 @@ var express = require("express");
 var bodyParser = require("body-parser");
 
 var app = express();
+//app.set('port', (process.env.PORT || 3000))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 //routing e api 
@@ -9,6 +10,11 @@ app.use(bodyParser.json());
 ///random/10/100, ma anche /random/foo/bar, quindi verifica che siano numeri...
 console.log('inizio...');
 //app.get("/random/:min/:max", function(req, res) {
+
+app.get("/", function (req, res){
+  res.status(200).end("Sono nella root");
+
+});
  app.get("/random/:min/:max", function(req, res) {
    var min = parseInt(req.params.min);
     var max = parseInt(req.params.max);
@@ -45,7 +51,7 @@ console.log('inizio...');
       res.json({ result: result });
     });  
 
-app.listen(3000, function() {
+app.listen(process.env.PORT || 3000, function() {
     console.log("App started on port 3000");
   });
 

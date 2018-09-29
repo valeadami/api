@@ -31,6 +31,8 @@ app.get("/", function (req, res){
    //random/1/10
   //app.post("/random/:min/:max", function(req, res) {
     app.post("/random/", function(req, res) {
+      //devo adattare il codice per dialogflow
+      console.log(JSON.stringify(req.body));
      /*var min = parseInt(req.params.min);
       var max = parseInt(req.params.max);*/
       //prova mia:
@@ -40,15 +42,26 @@ app.get("/", function (req, res){
       var max=parseInt(req.query.max);
 */
       //da form da postman non funziona
-      var min=parseInt(req.body.min);
-      var max=parseInt(req.body.max);
+    //  var min=parseInt(req.body.min); req.body.result.parameters.
+      // var max=parseInt(req.body.max);
+      /*  adattare il codice per DG!!!!!*/
+      var min=parseInt(req.body.result.parameters.min);
+      var max=parseInt(req.body.result.parameters.max);
     if (isNaN(min) || isNaN(max)) {
       res.status(400);
       res.json({ error: "Bad request." });
       return;
     }
+
     var result = Math.round((Math.random() * (max - min)) + min);
-      res.json({ result: result });
+    //preparo la risposta per DG
+    res.setHeader('Content-Type', 'application/json');
+     // res.json({ result: result });
+     res.json({
+      speech: "il numero e' " + result,
+            displayText: "il numero e' " + result,
+            data: null
+     })
     });  
 
 app.listen(process.env.PORT || 3000, function() {

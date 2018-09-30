@@ -2,12 +2,12 @@ var express = require("express");
 var bodyParser = require("body-parser");
 const querystring = require('querystring');
 const https = require('http');
-var session = require('express-session');
+//var session = require('express-session');
 var app = express();
-var sess = {
+/*var sess = {
   secret: 'keyboard cat',
   cookie: {secure: false, maxAge: 60000}
-}
+}*/
 let avaSession='';
 let cont=0;
 let strSessions=new Array();

@@ -2,14 +2,21 @@ var express = require("express");
 var bodyParser = require("body-parser");
 const querystring = require('querystring');
 const https = require('http');
+var session = require('express-session');
 var app = express();
-//app.set('port', (process.env.PORT || 3000))
+var sess = {
+  secret: 'keyboard cat',
+  cookie: {secure: false, maxAge: 60000}
+}
+let avaSession='';
+let cont=0;
+let strSessions=new Array();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 //routing e api 
 // route handler for GET requests 
 ///random/10/100, ma anche /random/foo/bar, quindi verifica che siano numeri...
-console.log('inizio...');
+
 //app.get("/random/:min/:max", function(req, res) {
 /*  PER FARE POST SU AVA*/
 
@@ -28,7 +35,7 @@ postData = querystring.stringify({
   headers: {
     'Content-Type': 'application/json', 
    // 'Content-Length': Buffer.byteLength(postData),
-   // 'Cookie':'JSESSIONID=' +avaSession
+    'Cookie':'JSESSIONID=' +avaSession
   }
 };
 
@@ -88,33 +95,11 @@ app.get("/", function (req, res){
 app.post("/callAVA", function (req,res){
   let strRicerca='';
   let out='';
-  var str= req.body.queryResult.parameters.searchText; //req.body.searchText;//req.body.queryResult.parameters.searchText;
+  var str= req.body.searchText;//req.body.queryResult.parameters.searchText; //req.body.searchText;
   if (str) {
     strRicerca=querystring.escape(str);
     options.path+=strRicerca+'&user=&pwd=&ava=FarmaInfoBot';
-   /*out=callAVA(strRicerca);
-    if (out){
-      console.log("SONO IN OUT QUINDI CALLAVA OK");
-      res.status(200).json({
-        fulfillmentText: "OUTPUT: " +out,
-        payload: null
-        });
-
-    }else {
-      res.json({
-        fulfillmentText: "errore: ",
-        payload: null
-        });
-    }
-  }else {
-    res.json({
-      fulfillmentText: "non leggo parametro di ricerca ",
-      payload: null
-      });
-  }
   
-});
-*/
 callAVA( strRicerca).then((strOutput)=> {
        
   return res.json({ 'fulfillmentText': strOutput }); 
@@ -149,25 +134,21 @@ function callAVA(stringaRicerca) {
             strOutput=c.output[0].output; 
             //pulisco tag HTML       
             strOutput=strOutput.replace(/(<\/p>|<p>|<b>|<\/b>|<br>|<\/br>|<strong>|<\/strong>|<div>|<\/div>|<ul>|<li>|<\/ul>|<\/li>|&nbsp;|)/gi, '');
-            //return strOutput;
-            //CONTROLLO SE AVASESSION E' VUOTA, SE NO CONCATENA SEMPRE le sessioni
-            /* if (avaSession ==='' ){
-                 console.log('se avaSession è vuota ...');
-              
-                avaSession=c.sessionID;
-                
-              
-                 options.headers.Cookie+=avaSession;
-                 console.log('VALORE DEL COOKIE ' + options.headers.Cookie);
-                console.log('------------->VALORE DEL COOKIE<------' +options.headers.Cookie);
-            }else {
-                
-                 console.log('NN HO INSERITO IL COOKIE'); 
-                
-            }
-           */
-            
-            /* fino a qui */
+           /* gestione sessioni alla VECCHIA */
+           if (avaSession ==='' ){
+            console.log('se avaSession è vuota ...');
+           //avaSession=strSessions[cont];
+           avaSession=c.sessionID;
+           
+            options.headers.Cookie+=avaSession;
+            console.log('VALORE DEL COOKIE ' + options.headers.Cookie);
+           console.log('------------->VALORE DEL COOKIE<------' +options.headers.Cookie);
+       }else {
+           
+            console.log('NN HO INSERITO IL COOKIE'); 
+           
+       }
+       /* FINE SESSIONI ALLA VECCHIA */
             resolve(strOutput); 
            
           

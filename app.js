@@ -164,8 +164,20 @@ function callAVA(stringaRicerca) {
     console.log('________valore di options.path INIZIO ' + options.path);
     console.log(`STATUS DELLA RISPOSTA: ${res.statusCode}`);
     console.log(`HEADERS DELLA RISPOSTA: ${JSON.stringify(res.headers)}`);
-    // console.log('..............BEFORE valore di avaSession ' + avaSession );
+    console.log('..............RES HEADER ' + res.headers["set-cookie"] );
+    if (res.headers["set-cookie"]){
+
+      var x = res.headers["set-cookie"].toString();
+      var arr=x.split(';')
+      //arr[0] contiene il valore della sessione
+      options.headers.Cookie=arr[0];
+      console.log('------------->VALORE DEL COOKIE<------' +options.headers.Cookie);
+    } else {
+
+      options.headers.Cookie='';
+    }
     
+    console.log('------------->VALORE DEL COOKIE PRE<------' +options.headers.Cookie);
     res.setEncoding('utf8');
     res.on('data', (chunk) => {
      console.log(`BODY: ${chunk}`);
@@ -178,7 +190,7 @@ function callAVA(stringaRicerca) {
 
            /* gestione sessioni NUOVA */
            //CONTROLLO SE AVASESSION E' VUOTA, SE NO CONCATENA SEMPRE le sessioni
-           if (avaSession ==='' ){
+          /* if (avaSession ==='' ){
                   console.log('se avaSession è vuota ...');
                 //avaSession=strSessions[cont];
                 avaSession=c.sessionID;
@@ -193,7 +205,7 @@ function callAVA(stringaRicerca) {
                   console.log('NN HO INSERITO IL COOKIE'); 
                 
             }
-      
+      */
     
             resolve(strOutput); 
            
@@ -204,6 +216,7 @@ function callAVA(stringaRicerca) {
       
            
             options.path='/AVA/rest/searchService/search_2?searchText=';
+            //options.headers.Cookie='';
             console.log('valore di options.path FINE ' +  options.path);
 
     });

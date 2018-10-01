@@ -174,7 +174,7 @@ function callAVA(stringaRicerca) {
       console.log('------------->VALORE DEL COOKIE<------' +options.headers.Cookie);
     } else {
 
-      options.headers.Cookie='';
+      //options.headers.Cookie='';
     }
     
     console.log('------------->VALORE DEL COOKIE PRE<------' +options.headers.Cookie);

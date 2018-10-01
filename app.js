@@ -2,17 +2,56 @@ var express = require("express");
 var bodyParser = require("body-parser");
 const querystring = require('querystring');
 const https = require('http');
-//var session = require('express-session');
+/*var session = require('express-session');
+var parseurl = require('parseurl');*/
 var app = express();
-/*var sess = {
-  secret: 'keyboard cat',
-  cookie: {secure: false, maxAge: 60000}
-}*/
 let avaSession='';
 let cont=0;
-let strSessions=new Array();
+/*
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {secure: false, maxAge: 30000,name:'JSESSIONID'}
+}));
+*/
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+/* 
+app.use(function (req, res, next) {
+  if (!req.session.views) {
+    req.session.views = {}
+  }
+ 
+  // get the url pathname
+  var pathname = parseurl(req).pathname;
+ 
+  // count the views
+  req.session.views[pathname] = (req.session.views[pathname] || 0) + 1;
+  req.session.pippo='pippo';
+  req.session.mysession='';
+  
+  next();
+})
+ 
+app.get('/foo', function (req, res, next) {
+  
+  res.send('you viewed this page ' + req.session.views['/foo'] + ' times')
+})
+ 
+app.get('/bar', function (req, res, next) {
+  //if (req.session.pippo)
+ console.log('Cookies: ' + req.session.cookie.name);
+  res.send('you viewed this page ' + req.session.views['/bar'] + ' times e ti chiami '+req.session.id);
+})*/
+/*
+app.post('/bar', function (req, res, next) {
+  req.session.mysession=req.session.id;
+  res.send('you viewed this page ' + req.session.views['/bar'] + ' times e la tua sessione = '+req.session.mysession); 
+})*/
+
+/*** STUDIO SESSIONI */
 //routing e api 
 // route handler for GET requests 
 ///random/10/100, ma anche /random/foo/bar, quindi verifica che siano numeri...
@@ -35,15 +74,16 @@ postData = querystring.stringify({
   headers: {
     'Content-Type': 'application/json', 
    // 'Content-Length': Buffer.byteLength(postData),
-    'Cookie':'JSESSIONID=' +avaSession
+    'Cookie':'JSESSIONID=' // +avaSession 
   }
 };
 
-/** */
+/**LAVORO QUI PER STUDIO SESSIONI  */
 app.get("/", function (req, res){
-  res.status(200).end("Sono nella root");
+  res.status(200).end("Sono nella root...tolto +avaSession in headers");
 
 });
+
  app.get("/random/:min/:max", function(req, res) {
    var min = parseInt(req.params.min);
     var max = parseInt(req.params.max);
@@ -95,7 +135,7 @@ app.get("/", function (req, res){
 app.post("/callAVA", function (req,res){
   let strRicerca='';
   let out='';
-  var str= req.body.queryResult.parameters.searchText;//req.body.queryResult.parameters.searchText; //req.body.searchText;
+  var str= req.body.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
   if (str) {
     strRicerca=querystring.escape(str);
     options.path+=strRicerca+'&user=&pwd=&ava=FarmaInfoBot';
@@ -118,6 +158,7 @@ function callAVA(stringaRicerca) {
   return new Promise((resolve, reject) => {
     let data = '';
     let strOutput='';
+    
     const req = https.request(options, (res) => {
         
     console.log('________valore di options.path INIZIO ' + options.path);
@@ -134,21 +175,26 @@ function callAVA(stringaRicerca) {
             strOutput=c.output[0].output; 
             //pulisco tag HTML       
             strOutput=strOutput.replace(/(<\/p>|<p>|<b>|<\/b>|<br>|<\/br>|<strong>|<\/strong>|<div>|<\/div>|<ul>|<li>|<\/ul>|<\/li>|&nbsp;|)/gi, '');
-           /* gestione sessioni alla VECCHIA */
+
+           /* gestione sessioni NUOVA */
+           //CONTROLLO SE AVASESSION E' VUOTA, SE NO CONCATENA SEMPRE le sessioni
            if (avaSession ==='' ){
-            console.log('se avaSession è vuota ...');
-           //avaSession=strSessions[cont];
-           avaSession=c.sessionID;
-           
-            options.headers.Cookie+=avaSession;
-            console.log('VALORE DEL COOKIE ' + options.headers.Cookie);
-           console.log('------------->VALORE DEL COOKIE<------' +options.headers.Cookie);
-       }else {
-           
-            console.log('NN HO INSERITO IL COOKIE'); 
-           
-       }
-       /* FINE SESSIONI ALLA VECCHIA */
+                  console.log('se avaSession è vuota ...');
+                //avaSession=strSessions[cont];
+                avaSession=c.sessionID;
+                
+                //cont++;
+                //options.headers.Cookie+=avaSession;
+                  options.headers.Cookie+=avaSession;
+                  console.log('VALORE DEL COOKIE ' + options.headers.Cookie);
+                console.log('------------->VALORE DEL COOKIE<------' +options.headers.Cookie);
+                  }else {
+                
+                  console.log('NN HO INSERITO IL COOKIE'); 
+                
+            }
+      
+    
             resolve(strOutput); 
            
           
@@ -173,6 +219,7 @@ function callAVA(stringaRicerca) {
   
   req.write(postData);
   req.end();
+  
 });
 } 
 /*****FINE CALL AVA */
@@ -182,6 +229,11 @@ app.listen(process.env.PORT || 3000, function() {
     console.log("App started on port 3000");
   });
 
+  function getSessionIfExists()
+  {
+
+
+  }
 /*
 //DA USARE CON CURL DA LINEA DI COMANDO AD ESEMPIO CURL -X POST http://localhost:3000 
 app.get("/", function(req, res) {

@@ -2,23 +2,26 @@ var express = require("express");
 var bodyParser = require("body-parser");
 const querystring = require('querystring');
 const https = require('http');
-/*var session = require('express-session');
-var parseurl = require('parseurl');*/
+var session = require('express-session');
+var parseurl = require('parseurl');
 var app = express();
-let avaSession='';
+let sess='';
+/*let avaSession='';
 let cont=0;
-/*
+let strSessions=new Array();*/
+/*** STUDIO SESSIONI */
+//inizializzo la sessione
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
   cookie: {secure: false, maxAge: 30000,name:'JSESSIONID'}
 }));
-*/
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-/* 
+
 app.use(function (req, res, next) {
   if (!req.session.views) {
     req.session.views = {}
@@ -44,14 +47,14 @@ app.get('/bar', function (req, res, next) {
   //if (req.session.pippo)
  console.log('Cookies: ' + req.session.cookie.name);
   res.send('you viewed this page ' + req.session.views['/bar'] + ' times e ti chiami '+req.session.id);
-})*/
+})
 /*
 app.post('/bar', function (req, res, next) {
   req.session.mysession=req.session.id;
   res.send('you viewed this page ' + req.session.views['/bar'] + ' times e la tua sessione = '+req.session.mysession); 
 })*/
 
-/*** STUDIO SESSIONI */
+
 //routing e api 
 // route handler for GET requests 
 ///random/10/100, ma anche /random/foo/bar, quindi verifica che siano numeri...
@@ -133,9 +136,13 @@ app.get("/", function (req, res){
     });  
 //funzione callAVA
 app.post("/callAVA", function (req,res){
-  let strRicerca='';
+  
+  sess=req.session.id;
+  console.log("valore id della sessione " + sess);
+  res.json({ 'fulfillmentText': sess }); 
+  /*let strRicerca='';
   let out='';
-  var str= req.body.queryResult.parameters.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
+  var str= req.body.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
   if (str) {
     strRicerca=querystring.escape(str);
     options.path+=strRicerca+'&user=&pwd=&ava=FarmaInfoBot';
@@ -145,11 +152,11 @@ callAVA( strRicerca).then((strOutput)=> {
   return res.json({ 'fulfillmentText': strOutput }); 
  
 }).catch((error) => {
-  //console.log('Si è verificato errore : ' +error);
+ 
  return res.json({ 'fulfillmentText': 'errore: ' + error.message});
 
 });
- }
+ }*/
 });
 /* *************inizio CALL AVA * */
 
@@ -160,24 +167,25 @@ function callAVA(stringaRicerca) {
     let strOutput='';
     
     const req = https.request(options, (res) => {
-        
-    console.log('________valore di options.path INIZIO ' + options.path);
+    console.log("DENTRO CALL AVA " + sess);   
+    console.log('________valore di options.cookie INIZIO ' + options.headers.Cookie);
     console.log(`STATUS DELLA RISPOSTA: ${res.statusCode}`);
     console.log(`HEADERS DELLA RISPOSTA: ${JSON.stringify(res.headers)}`);
     console.log('..............RES HEADER ' + res.headers["set-cookie"] );
-    if (res.headers["set-cookie"]){
+    /*if (res.headers["set-cookie"]){
 
       var x = res.headers["set-cookie"].toString();
       var arr=x.split(';')
       //arr[0] contiene il valore della sessione
       options.headers.Cookie=arr[0];
+       strSessions.push(options.headers.Cookie);
+      cont++;
       console.log('------------->VALORE DEL COOKIE<------' +options.headers.Cookie);
     } else {
-
-      //options.headers.Cookie='';
+      var y=strSessions.pop();
+      options.headers.Cookie=y;
     }
-    
-    console.log('------------->VALORE DEL COOKIE PRE<------' +options.headers.Cookie);
+    */
     res.setEncoding('utf8');
     res.on('data', (chunk) => {
      console.log(`BODY: ${chunk}`);
@@ -187,7 +195,8 @@ function callAVA(stringaRicerca) {
             strOutput=c.output[0].output; 
             //pulisco tag HTML       
             strOutput=strOutput.replace(/(<\/p>|<p>|<b>|<\/b>|<br>|<\/br>|<strong>|<\/strong>|<div>|<\/div>|<ul>|<li>|<\/ul>|<\/li>|&nbsp;|)/gi, '');
-
+           
+            
            /* gestione sessioni NUOVA */
            //CONTROLLO SE AVASESSION E' VUOTA, SE NO CONCATENA SEMPRE le sessioni
           /* if (avaSession ==='' ){
@@ -216,7 +225,7 @@ function callAVA(stringaRicerca) {
       
            
             options.path='/AVA/rest/searchService/search_2?searchText=';
-            //options.headers.Cookie='';
+            
             console.log('valore di options.path FINE ' +  options.path);
 
     });

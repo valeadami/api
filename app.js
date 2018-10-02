@@ -150,9 +150,11 @@ app.get("/", function (req, res){
 //funzione callAVA
 app.post("/callAVA", function (req,res){
   
-  sess=req.session.id;
-  console.log("valore id della sessione " + sess);
-  res.json({ 'fulfillmentText': sess }); 
+  //sess=req.session.id;
+  //console.log("valore id della sessione " + sess);
+  var str=req.session.id  +' expires in: ' + (req.session.cookie.maxAge / 1000);
+  res.json({ 'fulfillmentText': str }); 
+  
   /*let strRicerca='';
   let out='';
   var str= req.body.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;

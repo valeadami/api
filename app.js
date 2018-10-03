@@ -1,9 +1,11 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 const querystring = require('querystring');
+var path = require("path");
 const https = require('http');
 var session = require('express-session');
 var parseurl = require('parseurl');
+var fs = require("fs");
 var app = express();
 let sess='';
 /*let avaSession='';
@@ -15,7 +17,7 @@ app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
-  cookie: {secure: false, maxAge: 60000,name:'JSESSIONID'}
+  cookie: {secure: false, maxAge: 180000,name:'JSESSIONID'}
 }));
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -34,6 +36,8 @@ app.use(function (req, res, next) {
   req.session.views[pathname] = (req.session.views[pathname] || 0) + 1;
   req.session.pippo='pippo';
   req.session.mysession='';
+  sess=req.session.id;
+  
   
   next();
 })
@@ -61,6 +65,32 @@ app.get('/bar', function (req, res, next) {
  console.log('Cookies: ' + req.session.cookie.name);
   res.send('you viewed this page ' + req.session.views['/bar'] + ' times e ti chiami '+req.session.id);
 })
+app.get('/writefs', function (req, res, next) {
+     sess=req.session.id;
+     /*fs.appendFile('sessions/'+ sess,'0HV+3S+MjoJyXvaYA0PUFySz.undefined', function (err) {
+      if (err) throw err;
+      console.log('Saved!');
+      res.send("salvato file di nome " + sess);
+    });*/
+
+    scriviSessione('sessions/',sess, '0HV+3S+MjoJyXvaYA0PUFySz.undefined');
+    res.send("salvato file di nome " + sess);
+    //if (risultato) console.log('ok');
+})
+app.get('/readfs', function (req, res, next) {
+  if (sess){
+
+ 
+    var c=leggiSessione('sessions/', sess);
+
+    res.send("letto "+c);
+  }else{
+    console.log('manca la sessione');
+
+}
+
+ });
+
 /*
 app.post('/bar', function (req, res, next) {
   req.session.mysession=req.session.id;
@@ -90,7 +120,7 @@ postData = querystring.stringify({
   headers: {
     'Content-Type': 'application/json', 
    // 'Content-Length': Buffer.byteLength(postData),
-    'Cookie':'JSESSIONID=' // +avaSession 
+    'Cookie':'' // +avaSession 
   }
 };
 
@@ -150,19 +180,18 @@ app.get("/", function (req, res){
 //funzione callAVA
 app.post("/callAVA", function (req,res){
   
-  //sess=req.session.id;
-  //console.log("valore id della sessione " + sess);
+ /*
   var str=req.session.id  +' expires in: ' + (req.session.cookie.maxAge / 1000);
-  res.json({ 'fulfillmentText': str }); 
+  res.json({ 'fulfillmentText': str }); */
   
-  /*let strRicerca='';
+  let strRicerca='';
   let out='';
-  var str= req.body.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
+  var str= req.body.queryResult.parameters.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
   if (str) {
     strRicerca=querystring.escape(str);
     options.path+=strRicerca+'&user=&pwd=&ava=FarmaInfoBot';
   
-callAVA( strRicerca).then((strOutput)=> {
+callAVA( strRicerca, req.session.id).then((strOutput)=> {
        
   return res.json({ 'fulfillmentText': strOutput }); 
  
@@ -171,36 +200,111 @@ callAVA( strRicerca).then((strOutput)=> {
  return res.json({ 'fulfillmentText': 'errore: ' + error.message});
 
 });
- }*/
+ }
+ 
+
 });
-/* *************inizio CALL AVA * */
 
+/**** FUNZIONI A SUPPORTO */
 
-function callAVA(stringaRicerca) {
+function scriviSessione(path, strSessione, strValore) {
+  
+  fs.appendFile(path + strSessione,strValore, function (err) {
+    if (err) {
+      
+      throw err;
+    
+    } else {
+    console.log('Saved file '+ path + strSessione);
+    
+    }
+     
+  });
+ 
+} 
+
+function leggiSessione(path, strSessione){
+  var contents='';
+  try {
+    fs.accessSync(__dirname+ '/sessions/'+ strSessione);
+    contents = fs.readFileSync(__dirname+'/sessions/'+ strSessione, 'utf8');
+    console.log(contents);
+  
+
+  }catch (err) {
+    if (err.code==='ENOENT')
+    console.log('il file non esiste...')
+   
+  }
+  return contents;
+
+} 
+  /*fs.stat('sessions/'+ strSessione, function(err, fileInfo) {
+    
+   if (err) {
+          console.log('errore');
+          throw err;
+    } else {
+
+      console.log('un file ? ' +fileInfo.isFile());
+      if (fileInfo.isFile()) {
+        fs.readFile('sessions/'+ strSessione, function(err, data) {
+          if (err)  {
+            console.error(err);
+           
+            throw err;
+            
+            
+          } else {
+            var d=data.toString('utf8');
+            console.log('nome del file ' +sess +', con valore ' + d);
+            options.headers.Cookie+=d;
+            console.log('cookie ' + options.headers.Cookie);
+            
+
+          }
+        
+        });
+
+      } else {
+        //
+      }
+      
+    }
+    
+    });*/
+    
+function callAVA(stringaRicerca, sess) {
   return new Promise((resolve, reject) => {
     let data = '';
     let strOutput='';
-    
+    var ss=leggiSessione(__dirname +'/sessions/', sess); //prima!!!
+    if (ss===''){
+      options.headers.Cookie='JSESSIONID=';
+
+    }else {
+      options.headers.Cookie='JSESSIONID='+ss;
+    }
+    //JSESSIONID=
+     // e li setto prima di partire!!!!!
+
     const req = https.request(options, (res) => {
     console.log("DENTRO CALL AVA " + sess);   
     console.log('________valore di options.cookie INIZIO ' + options.headers.Cookie);
+    console.log('________valore DOPO LETTURA ' + options.headers.Cookie);
     console.log(`STATUS DELLA RISPOSTA: ${res.statusCode}`);
     console.log(`HEADERS DELLA RISPOSTA: ${JSON.stringify(res.headers)}`);
     console.log('..............RES HEADER ' + res.headers["set-cookie"] );
-    /*if (res.headers["set-cookie"]){
+   
+    if (res.headers["set-cookie"]){
 
       var x = res.headers["set-cookie"].toString();
       var arr=x.split(';')
-      //arr[0] contiene il valore della sessione
-      options.headers.Cookie=arr[0];
-       strSessions.push(options.headers.Cookie);
-      cont++;
-      console.log('------------->VALORE DEL COOKIE<------' +options.headers.Cookie);
-    } else {
-      var y=strSessions.pop();
-      options.headers.Cookie=y;
-    }
-    */
+      var y=arr[0].split('=');
+      
+      scriviSessione(__dirname+'/sessions/',sess, y[1]); 
+     
+    } 
     res.setEncoding('utf8');
     res.on('data', (chunk) => {
      console.log(`BODY: ${chunk}`);
@@ -210,8 +314,10 @@ function callAVA(stringaRicerca) {
             strOutput=c.output[0].output; 
             //pulisco tag HTML       
             strOutput=strOutput.replace(/(<\/p>|<p>|<b>|<\/b>|<br>|<\/br>|<strong>|<\/strong>|<div>|<\/div>|<ul>|<li>|<\/ul>|<\/li>|&nbsp;|)/gi, '');
-           
-            
+           //prendo la sessione e il c.sessionID e lo scrivo su file
+
+           //scriviSessione('sessions/',sess, c.sessionID);
+
            /* gestione sessioni NUOVA */
            //CONTROLLO SE AVASESSION E' VUOTA, SE NO CONCATENA SEMPRE le sessioni
           /* if (avaSession ==='' ){
@@ -265,26 +371,3 @@ function callAVA(stringaRicerca) {
 app.listen(process.env.PORT || 3000, function() {
     console.log("App started on port 3000");
   });
-
-  function getSessionIfExists()
-  {
-
-
-  }
-/*
-//DA USARE CON CURL DA LINEA DI COMANDO AD ESEMPIO CURL -X POST http://localhost:3000 
-app.get("/", function(req, res) {
-  res.send("you just sent a GET request, friend");
-});
-app.post("/", function(req, res) {
-  res.send("a POST request? nice");
-});
-app.put("/", function(req, res) {
-  res.send("i don’t see a lot of PUT requests anymore");
-});
-app.delete("/", function(req, res) {
-  res.send("oh my, a DELETE??");
-});
-app.listen(3000, function() {
-  console.log("App is listening on port 3000");
-});*/

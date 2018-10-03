@@ -22,7 +22,7 @@ app.use(session({
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
+app.use(express.static(__dirname));
 
 app.use(function (req, res, next) {
   if (!req.session.views) {
@@ -186,7 +186,7 @@ app.post("/callAVA", function (req,res){
   
   let strRicerca='';
   let out='';
-  var str= req.body.queryResult.parameters.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
+  var str= req.body.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
   if (str) {
     strRicerca=querystring.escape(str);
     options.path+=strRicerca+'&user=&pwd=&ava=FarmaInfoBot';

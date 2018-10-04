@@ -4,6 +4,7 @@ const querystring = require('querystring');
 var path = require("path");
 const https = require('http');
 var session = require('express-session');
+var FileStore = require('session-file-store')(session);
 var parseurl = require('parseurl');
 var fs = require("fs");
 var app = express();
@@ -14,6 +15,7 @@ let strSessions=new Array();*/
 /*** STUDIO SESSIONI */
 //inizializzo la sessione
 app.use(session({
+  store: new FileStore(),
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
@@ -24,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(__dirname));
 
-/*app.use(function (req, res, next) {
+app.use(function (req, res, next) {
   if (!req.session.views) {
     req.session.views = {}
   }
@@ -40,7 +42,7 @@ app.use(express.static(__dirname));
   
   
   next();
-})*/
+})
 app.get('/', function(req, res, next) {
   if (req.session.views) {
     req.session.views++;
@@ -90,13 +92,6 @@ app.get('/readfs', function (req, res, next) {
 }
 
  });
-
-/*
-app.post('/bar', function (req, res, next) {
-  req.session.mysession=req.session.id;
-  res.send('you viewed this page ' + req.session.views['/bar'] + ' times e la tua sessione = '+req.session.mysession); 
-})*/
-
 
 //routing e api 
 // route handler for GET requests 
@@ -182,12 +177,13 @@ app.post("/callAVA", function (req,res){
   
  
   var str=req.session.id  +' expires in: ' + (req.session.cookie.maxAge / 1000);
-  console.log(str);
- /* res.json({ 'fulfillmentText': str }); */
-  
+  /*console.log('-----------------> LA SESSIONE <------------' +str);
+  res.send(str);*/
+ res.json({ 'fulfillmentText': + 'id sessione ' +str }); 
+  /* 
   let strRicerca='';
   let out='';
-  var str= req.body.queryResult.parameters.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
+  var str= req.body.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
   if (str) {
     strRicerca=querystring.escape(str);
     options.path+=strRicerca+'&user=&pwd=&ava=FarmaInfoBot';
@@ -202,7 +198,7 @@ callAVA( strRicerca, req.session.id).then((strOutput)=> {
 
 });
  }
- 
+ */
 
 });
 

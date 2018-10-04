@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(__dirname));
 
-app.use(function (req, res, next) {
+/*app.use(function (req, res, next) {
   if (!req.session.views) {
     req.session.views = {}
   }
@@ -40,7 +40,7 @@ app.use(function (req, res, next) {
   
   
   next();
-})
+})*/
 app.get('/', function(req, res, next) {
   if (req.session.views) {
     req.session.views++;
@@ -180,20 +180,21 @@ app.get("/", function (req, res){
 //funzione callAVA
 app.post("/callAVA", function (req,res){
   
- /*
+ 
   var str=req.session.id  +' expires in: ' + (req.session.cookie.maxAge / 1000);
-  res.json({ 'fulfillmentText': str }); */
+  console.log(str);
+ /* res.json({ 'fulfillmentText': str }); */
   
   let strRicerca='';
   let out='';
-  var str= req.body.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
+  var str= req.body.queryResult.parameters.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
   if (str) {
     strRicerca=querystring.escape(str);
     options.path+=strRicerca+'&user=&pwd=&ava=FarmaInfoBot';
   
 callAVA( strRicerca, req.session.id).then((strOutput)=> {
        
-  return res.json({ 'fulfillmentText': strOutput }); 
+  return res.json({ 'fulfillmentText': strOutput + ' id sessione ' + req.session.id}); 
  
 }).catch((error) => {
  
@@ -239,40 +240,7 @@ function leggiSessione(path, strSessione){
   return contents;
 
 } 
-  /*fs.stat('sessions/'+ strSessione, function(err, fileInfo) {
-    
-   if (err) {
-          console.log('errore');
-          throw err;
-    } else {
-
-      console.log('un file ? ' +fileInfo.isFile());
-      if (fileInfo.isFile()) {
-        fs.readFile('sessions/'+ strSessione, function(err, data) {
-          if (err)  {
-            console.error(err);
-           
-            throw err;
-            
-            
-          } else {
-            var d=data.toString('utf8');
-            console.log('nome del file ' +sess +', con valore ' + d);
-            options.headers.Cookie+=d;
-            console.log('cookie ' + options.headers.Cookie);
-            
-
-          }
-        
-        });
-
-      } else {
-        //
-      }
-      
-    }
-    
-    });*/
+  
     
 function callAVA(stringaRicerca, sess) {
   return new Promise((resolve, reject) => {

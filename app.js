@@ -25,7 +25,7 @@ app.use(session({
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(__dirname));
-
+/*
 app.use(function (req, res, next) {
   if (!req.session.views) {
     req.session.views = {}
@@ -43,7 +43,7 @@ app.use(function (req, res, next) {
   
   
   next();
-})
+})*/
 app.get('/', function(req, res, next) {
   if (req.session.views) {
     req.session.views++;
@@ -176,7 +176,9 @@ app.get("/", function (req, res){
 //funzione callAVA
 app.post("/callAVA", function (req,res){
 
-  
+  console.log("valore della sessione "+ req.session.id);
+  return res.json({ 'fulfillmentText': req.session.id }); 
+  /*
   let strRicerca='';
   let out='';
   var str= req.body.queryResult.parameters.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
@@ -194,7 +196,7 @@ callAVA( strRicerca, req.session.id).then((strOutput)=> {
 
 });
  }
- 
+ */
 
 });
 

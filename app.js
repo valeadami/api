@@ -39,6 +39,7 @@ app.use(function (req, res, next) {
   req.session.pippo='pippo';
   req.session.mysession='';
   sess=req.session.id;
+  req.session.myid=sess;
   
   
   next();
@@ -175,15 +176,16 @@ app.get("/", function (req, res){
 //funzione callAVA
 app.post("/callAVA", function (req,res){
   
- 
-  var str=req.session.id  +' expires in: ' + (req.session.cookie.maxAge / 1000);
+
+  //var str=req.session.id  +' expires in: ' + (req.session.cookie.maxAge / 1000);
+
   /*console.log('-----------------> LA SESSIONE <------------' +str);
   res.send(str);*/
  res.json({ 'fulfillmentText': + 'id sessione ' +str }); 
-  /* 
+  
   let strRicerca='';
   let out='';
-  var str= req.body.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
+  var str= req.body.queryResult.parameters.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
   if (str) {
     strRicerca=querystring.escape(str);
     options.path+=strRicerca+'&user=&pwd=&ava=FarmaInfoBot';
@@ -198,7 +200,7 @@ callAVA( strRicerca, req.session.id).then((strOutput)=> {
 
 });
  }
- */
+ 
 
 });
 
@@ -212,7 +214,7 @@ function scriviSessione(path, strSessione, strValore) {
       throw err;
     
     } else {
-    console.log('Saved file '+ path + strSessione);
+    console.log('DENTRO SCRIVI SESSIONE: SALVATO FILE '+ path + strSessione);
     
     }
      
@@ -225,12 +227,12 @@ function leggiSessione(path, strSessione){
   try {
     fs.accessSync(__dirname+ '/sessions/'+ strSessione);
     contents = fs.readFileSync(__dirname+'/sessions/'+ strSessione, 'utf8');
-    console.log(contents);
+    console.log('DENTRO LEGGI SESSIIONE ' +contents);
   
 
   }catch (err) {
     if (err.code==='ENOENT')
-    console.log('il file non esiste...')
+    console.log('DENTRO LEGGI SESSIONE :il file non esiste...')
    
   }
   return contents;
@@ -245,9 +247,10 @@ function callAVA(stringaRicerca, sess) {
     var ss=leggiSessione(__dirname +'/sessions/', sess); //prima!!!
     if (ss===''){
       options.headers.Cookie='JSESSIONID=';
-
+      console.log('DENTRO CALL AVA: SESSIONE VUOTA');
     }else {
       options.headers.Cookie='JSESSIONID='+ss;
+      console.log('DENTRO CALL AVA:  HO LA SESSIONE + JSESSIONID');
     }
     //JSESSIONID=
      // e li setto prima di partire!!!!!
@@ -255,7 +258,6 @@ function callAVA(stringaRicerca, sess) {
     const req = https.request(options, (res) => {
     console.log("DENTRO CALL AVA " + sess);   
     console.log('________valore di options.cookie INIZIO ' + options.headers.Cookie);
-    console.log('________valore DOPO LETTURA ' + options.headers.Cookie);
     console.log(`STATUS DELLA RISPOSTA: ${res.statusCode}`);
     console.log(`HEADERS DELLA RISPOSTA: ${JSON.stringify(res.headers)}`);
     console.log('..............RES HEADER ' + res.headers["set-cookie"] );

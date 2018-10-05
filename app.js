@@ -49,7 +49,8 @@ app.use(function (req, res, next) {
 })
 /*funzioni per gestire DG agente */
 function welcome (agent) {
-  agent.add(`Welcome to Express.JS webhook!`);
+  agent.add(`Welcome to Express.JS webhook! Session=` + agent.session);
+
 }
 
 function fallback (agent) {

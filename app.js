@@ -303,7 +303,7 @@ function leggiSessione(path, strSessione){
             strOutput=strOutput.replace(/(<\/p>|<p>|<b>|<\/b>|<br>|<\/br>|<strong>|<\/strong>|<div>|<\/div>|<ul>|<li>|<\/ul>|<\/li>|&nbsp;|)/gi, '');
         
             resolve(strOutput); */
-            resolve("sessione agente "+ agent.session);      
+            res.json('fulfillment-text'+ agent.session);      
           
     /*});
     res.on('end', () => {

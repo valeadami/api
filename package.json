@@ -10,8 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "actions-on-google": "^2.4.1",
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.3",
+    "dialogflow": "^0.7.0",
+    "dialogflow-fulfillment": "^0.6.0",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "session-file-store": "^1.2.0",

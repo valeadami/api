@@ -7,12 +7,14 @@ var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 var parseurl = require('parseurl');
 var fs = require("fs");
+
+
+
 var app = express();
 let sess='';
-/*let avaSession='';
-let cont=0;
-let strSessions=new Array();*/
-/*** STUDIO SESSIONI */
+const WELCOME_INTENT = 'input.welcome';
+const AVA_INTENT = 'MandaFuori';
+
 //inizializzo la sessione
 app.use(session({
   store: new FileStore(),
@@ -25,7 +27,8 @@ app.use(session({
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(__dirname));
-/*
+
+
 app.use(function (req, res, next) {
   if (!req.session.views) {
     req.session.views = {}
@@ -43,7 +46,28 @@ app.use(function (req, res, next) {
   
   
   next();
-})*/
+})
+/*funzioni per gestire DG agente */
+function welcome (agent) {
+  agent.add(`Welcome to Express.JS webhook!`);
+}
+
+function fallback (agent) {
+  agent.add(`I didn't understand from server`);
+  agent.add(`I'm sorry, can you try again?`);
+}
+function WebhookProcessing(req, res) {
+  const agent = new WebhookClient({request: req, response: res});
+  console.info(`agent set`);
+
+  let intentMap = new Map();
+  intentMap.set('Default Welcome Intent', welcome);
+  intentMap.set('Default Fallback Intent', fallback);
+  intentMap.set('qualunquetesto', callAVA);
+  agent.handleRequest(intentMap);
+}
+
+
 app.get('/', function(req, res, next) {
   if (req.session.views) {
     req.session.views++;
@@ -175,10 +199,10 @@ app.get("/", function (req, res){
     });  
 //funzione callAVA
 app.post("/callAVA", function (req,res){
-
-  console.log("valore della sessione "+ req.session.id);
-  return res.json({ 'fulfillmentText': req.session.id }); 
-  /*
+  console.log(`\n\n>>>>>>> S E R V E R   H I T <<<<<<<`);
+  WebhookProcessing(req, res); //usa handleAgent
+/*
+  
   let strRicerca='';
   let out='';
   var str= req.body.queryResult.parameters.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;

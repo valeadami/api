@@ -201,6 +201,8 @@ app.get("/", function (req, res){
 //funzione callAVA
 app.post("/callAVA", function (req,res){
   console.log(`\n\n>>>>>>> S E R V E R   H I T <<<<<<<`);
+  console.log('Dialogflow Request headers: ' + JSON.stringify(req.headers));
+  console.log('DIALOGFLOW Request body: ' + JSON.stringify(req.body));
   WebhookProcessing(req, res); //usa handleAgent
 /*
   
@@ -261,10 +263,10 @@ function leggiSessione(path, strSessione){
 } 
   
     
-//function callAVA(stringaRicerca, sess) {
-  function callAVA(agent) { 
+function callAVA(stringaRicerca, sess) {
+  //function callAVA(agent) { 
   return new Promise((resolve, reject) => {
-  /* let data = '';
+   let data = '';
     let strOutput='';
     var ss=leggiSessione(__dirname +'/sessions/', sess);
     if (ss===''){
@@ -302,10 +304,10 @@ function leggiSessione(path, strSessione){
            
             strOutput=strOutput.replace(/(<\/p>|<p>|<b>|<\/b>|<br>|<\/br>|<strong>|<\/strong>|<div>|<\/div>|<ul>|<li>|<\/ul>|<\/li>|&nbsp;|)/gi, '');
         
-            resolve(strOutput); */
-            res.json('fulfillment-text'+ agent.session);      
+            resolve(strOutput); 
+            
           
-    /*});
+    });
     res.on('end', () => {
       console.log('No more data in response.');
       
@@ -320,14 +322,14 @@ function leggiSessione(path, strSessione){
   req.on('error', (e) => {
     console.error(`problem with request: ${e.message}`);
     strOutput="si è verificato errore " + e.message;
-   // return strOutput;
+   
   });
   
   // write data to request body
   
   req.write(postData);
   req.end();
-  */
+  
 });
 } 
 /*****FINE CALL AVA */

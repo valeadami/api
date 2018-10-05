@@ -261,11 +261,12 @@ function leggiSessione(path, strSessione){
 } 
   
     
-function callAVA(stringaRicerca, sess) {
+//function callAVA(stringaRicerca, sess) {
+  function callAVA(agent) { 
   return new Promise((resolve, reject) => {
-    let data = '';
+  /* let data = '';
     let strOutput='';
-    var ss=leggiSessione(__dirname +'/sessions/', sess); //prima!!!
+    var ss=leggiSessione(__dirname +'/sessions/', sess);
     if (ss===''){
       options.headers.Cookie='JSESSIONID=';
       console.log('DENTRO CALL AVA: SESSIONE VUOTA');
@@ -273,8 +274,7 @@ function callAVA(stringaRicerca, sess) {
       options.headers.Cookie='JSESSIONID='+ss;
       console.log('DENTRO CALL AVA:  HO LA SESSIONE + JSESSIONID');
     }
-    //JSESSIONID=
-     // e li setto prima di partire!!!!!
+  
 
     const req = https.request(options, (res) => {
     console.log("DENTRO CALL AVA " + sess);   
@@ -296,38 +296,16 @@ function callAVA(stringaRicerca, sess) {
     res.on('data', (chunk) => {
      console.log(`BODY: ${chunk}`);
      data += chunk;
-    //sposto qua
+   
      let c=JSON.parse(data);
             strOutput=c.output[0].output; 
-            //pulisco tag HTML       
-            strOutput=strOutput.replace(/(<\/p>|<p>|<b>|<\/b>|<br>|<\/br>|<strong>|<\/strong>|<div>|<\/div>|<ul>|<li>|<\/ul>|<\/li>|&nbsp;|)/gi, '');
-           //prendo la sessione e il c.sessionID e lo scrivo su file
-
-           //scriviSessione('sessions/',sess, c.sessionID);
-
-           /* gestione sessioni NUOVA */
-           //CONTROLLO SE AVASESSION E' VUOTA, SE NO CONCATENA SEMPRE le sessioni
-          /* if (avaSession ==='' ){
-                  console.log('se avaSession è vuota ...');
-                //avaSession=strSessions[cont];
-                avaSession=c.sessionID;
-                
-                //cont++;
-                //options.headers.Cookie+=avaSession;
-                  options.headers.Cookie+=avaSession;
-                  console.log('VALORE DEL COOKIE ' + options.headers.Cookie);
-                console.log('------------->VALORE DEL COOKIE<------' +options.headers.Cookie);
-                  }else {
-                
-                  console.log('NN HO INSERITO IL COOKIE'); 
-                
-            }
-      */
-    
-            resolve(strOutput); 
            
+            strOutput=strOutput.replace(/(<\/p>|<p>|<b>|<\/b>|<br>|<\/br>|<strong>|<\/strong>|<div>|<\/div>|<ul>|<li>|<\/ul>|<\/li>|&nbsp;|)/gi, '');
+        
+            resolve(strOutput); */
+            resolve("sessione agente "+ agent.session);      
           
-    });
+    /*});
     res.on('end', () => {
       console.log('No more data in response.');
       
@@ -349,7 +327,7 @@ function callAVA(stringaRicerca, sess) {
   
   req.write(postData);
   req.end();
-  
+  */
 });
 } 
 /*****FINE CALL AVA */

@@ -48,6 +48,7 @@ app.use(function (req, res, next) {
   next();
 })
 /*funzioni per gestire DG agente */
+/*
 function welcome (agent) {
   agent.add(`Welcome to Express.JS webhook! Session=` + agent.session);
 
@@ -57,6 +58,7 @@ function fallback (agent) {
   agent.add(`I didn't understand from server`);
   agent.add(`I'm sorry, can you try again?`);
 }
+/
 function WebhookProcessing(req, res) {
   const agent = new WebhookClient({request: req, response: res});
   console.info(`agent set`);
@@ -66,7 +68,7 @@ function WebhookProcessing(req, res) {
   intentMap.set('Default Fallback Intent', fallback);
   intentMap.set('qualunquetesto', callAVA);
   agent.handleRequest(intentMap);
-}
+}*/
 
 
 app.get('/', function(req, res, next) {
@@ -145,12 +147,6 @@ postData = querystring.stringify({
   }
 };
 
-/**LAVORO QUI PER STUDIO SESSIONI  
-app.get("/", function (req, res){
-  res.status(200).end("Sono nella root...tolto +avaSession in headers");
-
-});
-*/
  app.get("/random/:min/:max", function(req, res) {
    var min = parseInt(req.params.min);
     var max = parseInt(req.params.max);
@@ -201,10 +197,14 @@ app.get("/", function (req, res){
 //funzione callAVA
 app.post("/callAVA", function (req,res){
   console.log(`\n\n>>>>>>> S E R V E R   H I T <<<<<<<`);
-  console.log('Dialogflow Request headers: ' + JSON.stringify(req.headers));
+  //console.log('Dialogflow Request headers: ' + JSON.stringify(req.headers));
   console.log('DIALOGFLOW Request body: ' + JSON.stringify(req.body));
-  WebhookProcessing(req, res); //usa handleAgent
-/*
+  //projects/testcallava/agent/sessions/dac5d6c5-c63f-b62d-7472-3f7673dc00e9
+  
+  let sessionId = req.body.session.split('/').pop();
+  console.log('valore di sessionID DG '+sessionId);
+  //WebhookProcessing(req, res); //usa handleAgent
+
   
   let strRicerca='';
   let out='';
@@ -213,9 +213,9 @@ app.post("/callAVA", function (req,res){
     strRicerca=querystring.escape(str);
     options.path+=strRicerca+'&user=&pwd=&ava=FarmaInfoBot';
   
-callAVA( strRicerca, req.session.id).then((strOutput)=> {
+callAVA( strRicerca, sessionId).then((strOutput)=> {
        
-  return res.json({ 'fulfillmentText': strOutput + ' id sessione ' + req.session.id}); 
+  return res.json({ 'fulfillmentText': strOutput}); 
  
 }).catch((error) => {
  
@@ -223,7 +223,7 @@ callAVA( strRicerca, req.session.id).then((strOutput)=> {
 
 });
  }
- */
+
 
 });
 

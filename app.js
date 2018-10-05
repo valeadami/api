@@ -7,7 +7,7 @@ var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 var parseurl = require('parseurl');
 var fs = require("fs");
-
+var {WebhookClient} = require('dialogflow-fulfillment');
 
 
 var app = express();

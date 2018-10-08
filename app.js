@@ -50,7 +50,7 @@ app.use(function (req, res, next) {
 /*funzioni per gestire DG agente */
 
 function welcome (agent) {
-  agent.add(`Welcome to Express.JS webhook! Session=` + agent.session);
+  agent.add(`Welcome to Express.JS webhook! Session=` + agent.sessionId);
   
 }
 
@@ -60,13 +60,13 @@ function fallback (agent) {
 }
 function WebhookProcessing(req, res) {
   const agent = new WebhookClient({request: req, response: res});
-  console.info(`agent set`);
+  console.info(`agent set` + agent.session);
 
   
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
-  intentMap.set('qualunquetesto', callAVA(req));
+  intentMap.set('qualunquetesto', callAVA);
   agent.handleRequest(intentMap);
 }
 

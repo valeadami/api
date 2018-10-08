@@ -196,6 +196,8 @@ postData = querystring.stringify({
 //funzione callAVA
 app.post("/callAVA", function (req,res){
 
+  console.log('Dialogflow Request headers: ' + JSON.stringify(req.headers));
+  console.log('DIALOGFLOW Request body: ' + JSON.stringify(req.body));
   //
   WebhookProcessing(req, res); //usa handleAgent
   /*console.log(`\n\n>>>>>>> S E R V E R   H I T <<<<<<<`);

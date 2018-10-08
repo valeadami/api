@@ -50,7 +50,7 @@ app.use(function (req, res, next) {
 /*funzioni per gestire DG agente */
 
 function welcome (agent) {
-  agent.add(`Welcome to Express.JS webhook! Session=` + agent.sessionId);
+  agent.add(`Welcome to Express.JS webhook! `);
   
 }
 
@@ -276,8 +276,9 @@ function leggiSessione(path, strSessione){
 
   let strRicerca='';
   let out='';
-  let sessionId = agent.sessionId.split('/').pop();
-  var str= req.body.queryResult.parameters.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
+  let sessionId = agent.sessionId /*.split('/').pop()*/;
+  console.log('dentro call ava il mio session id '+sessionId);
+  var str= agent.parameters.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
   if (str) {
     strRicerca=querystring.escape(str);
     options.path+=strRicerca+'&user=&pwd=&ava=FarmaInfoBot';
@@ -297,7 +298,7 @@ function leggiSessione(path, strSessione){
   
 
     const req = https.request(options, (res) => {
-    console.log("DENTRO CALL AVA " + sess);   
+    //console.log("DENTRO CALL AVA " + sess);   
     console.log('________valore di options.cookie INIZIO ' + options.headers.Cookie);
     console.log(`STATUS DELLA RISPOSTA: ${res.statusCode}`);
     console.log(`HEADERS DELLA RISPOSTA: ${JSON.stringify(res.headers)}`);
@@ -325,6 +326,7 @@ function leggiSessione(path, strSessione){
         
             //resolve(strOutput); 
             agent.add(strOutput);
+            resolve(agent);
             
           
     });

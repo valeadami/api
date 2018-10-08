@@ -60,7 +60,9 @@ function fallback (agent) {
 }
 function WebhookProcessing(req, res) {
   const agent = new WebhookClient({request: req, response: res});
-  console.info(`agent set ` + agent.sessionId +`parameters ` + agent.parameters.searchText);
+  agent.sessionId=req.body.session.split('/').pop();
+  agent.parameters['searchText']=req.body.queryResult.parameters.searchText;
+  console.info(`agent set ` + agent.sessionId +` parameters ` + agent.parameters.searchText);
 
   
   let intentMap = new Map();

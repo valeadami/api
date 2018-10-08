@@ -199,10 +199,11 @@ postData = querystring.stringify({
 //funzione callAVA
 app.post("/callAVA", function (req,res){
 
-  console.log('Dialogflow Request headers: ' + JSON.stringify(req.headers));
-  console.log('DIALOGFLOW Request body: ' + JSON.stringify(req.body));
+  //console.log('Dialogflow Request headers: ' + JSON.stringify(req.headers));
+  //console.log('DIALOGFLOW Request body: ' + JSON.stringify(req.body));
   //
   WebhookProcessing(req, res); //usa handleAgent
+  /*****************OLD ************** */
   /*console.log(`\n\n>>>>>>> S E R V E R   H I T <<<<<<<`);
   //console.log('Dialogflow Request headers: ' + JSON.stringify(req.headers));
   console.log('DIALOGFLOW Request body: ' + JSON.stringify(req.body));
@@ -269,8 +270,10 @@ function leggiSessione(path, strSessione){
 
 } 
   
-    
+  // OLD SIGNATURE
 //function callAVA(stringaRicerca, sess) {
+
+//NEW SIGNATURE + AGENT
   function callAVA(agent) { 
   return new Promise((resolve, reject) => {
 
@@ -324,8 +327,8 @@ function leggiSessione(path, strSessione){
            
             strOutput=strOutput.replace(/(<\/p>|<p>|<b>|<\/b>|<br>|<\/br>|<strong>|<\/strong>|<div>|<\/div>|<ul>|<li>|<\/ul>|<\/li>|&nbsp;|)/gi, '');
         
-            //resolve(strOutput); 
-            agent.add(strOutput);
+            //resolve(strOutput); <--- OLD 
+            agent.add(strOutput); //NEW 
             resolve(agent);
             
           

@@ -62,23 +62,12 @@ function WebhookProcessing(req, res) {
   const agent = new WebhookClient({request: req, response: res});
   console.info(`agent set`);
 
-  const action = agent.action;
-  switch (action) {
-    case WELCOME_INTENT:
-        agent.add(`Welcome to Tyagi's Test Agent!`);
-        break;
-
-    case AVA_INTENT:
-        agent.add(`sono in ava!`);
-        console.log('sono dentro ava_intent')
-        break;
-}
-  /*
+  
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
-  intentMap.set('qualunquetesto', callAVA);
-  agent.handleRequest(intentMap);*/
+  intentMap.set('qualunquetesto', callAVA(req));
+  agent.handleRequest(intentMap);
 }
 
 

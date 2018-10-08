@@ -48,17 +48,17 @@ app.use(function (req, res, next) {
   next();
 })
 /*funzioni per gestire DG agente */
-/*
+
 function welcome (agent) {
   agent.add(`Welcome to Express.JS webhook! Session=` + agent.session);
-
+  console.log('Dialogflow Request headers: ' + JSON.stringify(req.headers));
+  console.log('DIALOGFLOW Request body: ' + JSON.stringify(req.body));
 }
 
 function fallback (agent) {
   agent.add(`I didn't understand from server`);
   agent.add(`I'm sorry, can you try again?`);
 }
-/
 function WebhookProcessing(req, res) {
   const agent = new WebhookClient({request: req, response: res});
   console.info(`agent set`);
@@ -68,7 +68,7 @@ function WebhookProcessing(req, res) {
   intentMap.set('Default Fallback Intent', fallback);
   intentMap.set('qualunquetesto', callAVA);
   agent.handleRequest(intentMap);
-}*/
+}
 
 
 app.get('/', function(req, res, next) {

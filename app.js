@@ -60,7 +60,7 @@ function fallback (agent) {
 }
 function WebhookProcessing(req, res) {
   const agent = new WebhookClient({request: req, response: res});
-  console.info(`agent set` + agent.session);
+  console.info(`agent set ` + agent.sessionId +`parameters ` + agent.parameters.searchText);
 
   
   let intentMap = new Map();
@@ -269,12 +269,12 @@ function leggiSessione(path, strSessione){
   
     
 //function callAVA(stringaRicerca, sess) {
-  function callAVA(agent,req) { 
+  function callAVA(agent) { 
   return new Promise((resolve, reject) => {
 
   let strRicerca='';
   let out='';
-  let sessionId = req.body.session.split('/').pop();
+  let sessionId = agent.sessionId.split('/').pop();
   var str= req.body.queryResult.parameters.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
   if (str) {
     strRicerca=querystring.escape(str);

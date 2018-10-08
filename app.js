@@ -51,8 +51,7 @@ app.use(function (req, res, next) {
 
 function welcome (agent) {
   agent.add(`Welcome to Express.JS webhook! Session=` + agent.session);
-  console.log('Dialogflow Request headers: ' + JSON.stringify(req.headers));
-  console.log('DIALOGFLOW Request body: ' + JSON.stringify(req.body));
+  
 }
 
 function fallback (agent) {

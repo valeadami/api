@@ -267,12 +267,23 @@ function leggiSessione(path, strSessione){
 } 
   
     
-function callAVA(stringaRicerca, sess) {
-  //function callAVA(agent) { 
+//function callAVA(stringaRicerca, sess) {
+  function callAVA(agent,req) { 
   return new Promise((resolve, reject) => {
+
+  let strRicerca='';
+  let out='';
+  let sessionId = req.body.session.split('/').pop();
+  var str= req.body.queryResult.parameters.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
+  if (str) {
+    strRicerca=querystring.escape(str);
+    options.path+=strRicerca+'&user=&pwd=&ava=FarmaInfoBot';
+  }
+
    let data = '';
     let strOutput='';
-    var ss=leggiSessione(__dirname +'/sessions/', sess);
+    //var ss=leggiSessione(__dirname +'/sessions/', sess);
+    var ss=leggiSessione(__dirname +'/sessions/', sessionId);
     if (ss===''){
       options.headers.Cookie='JSESSIONID=';
       console.log('DENTRO CALL AVA: SESSIONE VUOTA');
@@ -295,8 +306,9 @@ function callAVA(stringaRicerca, sess) {
       var arr=x.split(';')
       var y=arr[0].split('=');
       
-      scriviSessione(__dirname+'/sessions/',sess, y[1]); 
+     // scriviSessione(__dirname+'/sessions/',sess, y[1]); 
      
+     scriviSessione(__dirname+'/sessions/',sessionId, y[1]); 
     } 
     res.setEncoding('utf8');
     res.on('data', (chunk) => {
@@ -308,7 +320,8 @@ function callAVA(stringaRicerca, sess) {
            
             strOutput=strOutput.replace(/(<\/p>|<p>|<b>|<\/b>|<br>|<\/br>|<strong>|<\/strong>|<div>|<\/div>|<ul>|<li>|<\/ul>|<\/li>|&nbsp;|)/gi, '');
         
-            resolve(strOutput); 
+            //resolve(strOutput); 
+            agent.add(strOutput);
             
           
     });

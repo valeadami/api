@@ -196,14 +196,17 @@ postData = querystring.stringify({
     });  
 //funzione callAVA
 app.post("/callAVA", function (req,res){
-  console.log(`\n\n>>>>>>> S E R V E R   H I T <<<<<<<`);
+
+  //
+  WebhookProcessing(req, res); //usa handleAgent
+  /*console.log(`\n\n>>>>>>> S E R V E R   H I T <<<<<<<`);
   //console.log('Dialogflow Request headers: ' + JSON.stringify(req.headers));
   console.log('DIALOGFLOW Request body: ' + JSON.stringify(req.body));
   //projects/testcallava/agent/sessions/dac5d6c5-c63f-b62d-7472-3f7673dc00e9
   
   let sessionId = req.body.session.split('/').pop();
   console.log('valore di sessionID DG '+sessionId);
-  //WebhookProcessing(req, res); //usa handleAgent
+  
 
   
   let strRicerca='';
@@ -224,7 +227,7 @@ callAVA( strRicerca, sessionId).then((strOutput)=> {
 });
  }
 
-
+*/
 });
 
 /**** FUNZIONI A SUPPORTO */

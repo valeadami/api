@@ -12,6 +12,7 @@ var {WebhookClient} = require('dialogflow-fulfillment');
 
 var app = express();
 let sess='';
+var bot='';
 const WELCOME_INTENT = 'input.welcome';
 const AVA_INTENT = 'MandaFuori'; //MandaFuori
 
@@ -58,11 +59,21 @@ function fallback (agent) {
   agent.add(`I didn't understand from server`);
   agent.add(`I'm sorry, can you try again?`);
 }
+/*http://86.107.98.69:8080/AVA/avatar.jsp?ava=AlpiGiulieDemo 
+http://86.107.98.69:8080/AVA/avatar.jsp?ava=FarmaInfoBot
+http://86.107.98.69:8080/AVA/avatar.jsp?ava=Olivia
+*/
 function WebhookProcessing(req, res) {
   const agent = new WebhookClient({request: req, response: res});
+  //recupero la sessionId della conversazione
   agent.sessionId=req.body.session.split('/').pop();
+//assegno all'agente il parametro di ricerca da invare sotto forma di searchText a Panloquacity
   agent.parameters['searchText']=req.body.queryResult.parameters.searchText;
   console.info(`agent set ` + agent.sessionId +` parameters ` + agent.parameters.searchText);
+
+  //recupero quale agente viene interrogato
+   bot=req.query.ava;
+  console.log('Il bot  interrogato : '+bot);
 
   
   let intentMap = new Map();
@@ -203,6 +214,8 @@ app.post("/callAVA", function (req,res){
   //console.log('DIALOGFLOW Request body: ' + JSON.stringify(req.body));
   //
   WebhookProcessing(req, res); //usa handleAgent
+
+ 
   /*****************OLD ************** */
   /*console.log(`\n\n>>>>>>> S E R V E R   H I T <<<<<<<`);
   //console.log('Dialogflow Request headers: ' + JSON.stringify(req.headers));
@@ -284,7 +297,7 @@ function leggiSessione(path, strSessione){
   var str= agent.parameters.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
   if (str) {
     strRicerca=querystring.escape(str);
-    options.path+=strRicerca+'&user=&pwd=&ava=FarmaInfoBot';
+    options.path+=strRicerca+'&user=&pwd=&ava='+bot;
   }
 
    let data = '';

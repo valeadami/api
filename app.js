@@ -84,7 +84,7 @@ function WebhookProcessing(req, res) {
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
  // intentMap.set('Welcome', welcome);
-  intentMap.set('qualunquetesto', callAVA); //'qualunquetesto'
+  intentMap.set('AnyText', callAVA); //'qualunquetesto'
   //intentMap.set('CloseConversation', callAVA);
   
   agent.handleRequest(intentMap);

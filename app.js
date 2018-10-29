@@ -13,8 +13,8 @@ var {WebhookClient} = require('dialogflow-fulfillment');
 var app = express();
 let sess='';
 var bot='';
-const WELCOME_INTENT = 'input.welcome';
-const AVA_INTENT = 'SendToPanloquacity'; //MandaFuori
+/*const WELCOME_INTENT = 'input.welcome';
+const AVA_INTENT = 'SendToPanloquacity'; //MandaFuori*/
 
 //inizializzo la sessione
 app.use(session({
@@ -81,9 +81,9 @@ function WebhookProcessing(req, res) {
 
   
   let intentMap = new Map();
-  intentMap.set('Default Welcome Intent', welcome);
-  intentMap.set('Default Fallback Intent', fallback);
- // intentMap.set('Welcome', welcome);
+  //intentMap.set('Default Welcome Intent', welcome);
+  //intentMap.set('Default Fallback Intent', fallback);
+  intentMap.set('Welcome', callAVA); //welcome
   intentMap.set('AnyText', callAVA); //'qualunquetesto'
   //intentMap.set('CloseConversation', callAVA);
   

@@ -49,11 +49,11 @@ app.use(function (req, res, next) {
   next();
 })
 /*funzioni per gestire DG agente */
-function CloseConversation (agent) {
+/*function CloseConversation (agent) {
   agent.add(`qui chiudo la conversazione `);
   console.log('qui chiudo la conversazione');
   
-}
+}*/
 function welcome (agent) {
   agent.add(`Welcome to Express.JS webhook! `);
   console.log('sono nel welcome');
@@ -81,10 +81,10 @@ function WebhookProcessing(req, res) {
 
   
   let intentMap = new Map();
-  /*intentMap.set('Default Welcome Intent', welcome);
-  intentMap.set('Default Fallback Intent', fallback);*/
-  intentMap.set('Welcome', welcome);
-  intentMap.set('AnyText', callAVA);
+  intentMap.set('Default Welcome Intent', welcome);
+  intentMap.set('Default Fallback Intent', fallback);
+ // intentMap.set('Welcome', welcome);
+  intentMap.set('qualunquetesto', callAVA); //'qualunquetesto'
   //intentMap.set('CloseConversation', callAVA);
   
   agent.handleRequest(intentMap);

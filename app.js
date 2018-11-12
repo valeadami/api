@@ -2,7 +2,7 @@ var express = require("express");
 var bodyParser = require("body-parser");
 const querystring = require('querystring');
 var path = require("path");
-const https = require('http');
+const https = require('https'); // da http: a https: modifica del 12/11/2018
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 var parseurl = require('parseurl');
@@ -81,10 +81,11 @@ function WebhookProcessing(req, res) {
 
   
   let intentMap = new Map();
+  //modifica del 29/10/2018 commentato i due intent su richiesta R.
   //intentMap.set('Default Welcome Intent', welcome);
   //intentMap.set('Default Fallback Intent', fallback);
-  intentMap.set('Welcome', callAVA); //welcome
-  intentMap.set('AnyText', callAVA); //'qualunquetesto'
+  intentMap.set('Welcome', callAVA); //la funzione callAva sostiutisce la funzione welcome 
+  intentMap.set('AnyText', callAVA); // AnyText sostituisce 'qualunquetesto'
   //intentMap.set('CloseConversation', callAVA);
   
   agent.handleRequest(intentMap);
@@ -156,8 +157,12 @@ postData = querystring.stringify({
   
 });
  const options = {
-  hostname: '86.107.98.69',
-  port: 8080, 
+   //modifica del 12/11/2018 : cambiato porta per supportare HTTPS
+   
+  hostname: '86.107.98.69', 
+  /*port: 8080,*/
+  port: 8443,
+
   path: '/AVA/rest/searchService/search_2?searchText=', 
   method: 'POST', 
   headers: {

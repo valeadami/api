@@ -2,7 +2,7 @@ var express = require("express");
 var bodyParser = require("body-parser");
 const querystring = require('querystring');
 var path = require("path");
-const https = require('http'); // da http: a https: modifica del 12/11/2018
+const https = require('https'); // da http: a https: modifica del 12/11/2018
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 var parseurl = require('parseurl');
@@ -160,8 +160,8 @@ postData = querystring.stringify({
    //modifica del 12/11/2018 : cambiato porta per supportare HTTPS
    
   hostname: '86.107.98.69', 
-  port: 8080,
-  /*port: 8443,*/
+  /*port: 8080,*/
+  port: 8443,
 
   path: '/AVA/rest/searchService/search_2?searchText=', 
   method: 'POST', 

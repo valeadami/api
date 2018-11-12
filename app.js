@@ -8,7 +8,7 @@ var FileStore = require('session-file-store')(session);
 var parseurl = require('parseurl');
 var fs = require("fs");
 var {WebhookClient} = require('dialogflow-fulfillment');
-
+require("tls").DEFAULT_ECDH_CURVE = "auto";
 
 var app = express();
 let sess='';

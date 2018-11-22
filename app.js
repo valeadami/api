@@ -1,3 +1,5 @@
+//12/11/2018: aggiornato con gestione HTTPS
+//https://panloquacity2dialogflow.herokuapp.com/callAVA?ava=FarmaInfoBot
 var express = require("express");
 var bodyParser = require("body-parser");
 const querystring = require('querystring');
@@ -86,6 +88,7 @@ function WebhookProcessing(req, res) {
   //intentMap.set('Default Fallback Intent', fallback);
   intentMap.set('Welcome', callAVA); //la funzione callAva sostiutisce la funzione welcome 
   intentMap.set('AnyText', callAVA); // AnyText sostituisce 'qualunquetesto'
+  intentMap.set('Stop', callAVA); //modifica del 22/11/2018 per gestire la fine della conversazione
   //intentMap.set('CloseConversation', callAVA);
   
   agent.handleRequest(intentMap);
@@ -162,7 +165,7 @@ postData = querystring.stringify({
   hostname: '86.107.98.69', 
   /*port: 8080,*/
   port: 8443,
-  rejectUnauthorized: false, // aggiunto qui
+  rejectUnauthorized: false, // aggiunto qui 12/11/2018 
   path: '/AVA/rest/searchService/search_2?searchText=', 
   method: 'POST', 
   headers: {

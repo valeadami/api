@@ -1,3 +1,6 @@
+//02/12/2018 BUG: caratteri accentati incorretti causa errata codifica
+//installato modulo utf8
+
 //12/11/2018: aggiornato con gestione HTTPS
 //https://panloquacity2dialogflow.herokuapp.com/callAVA?ava=FarmaInfoBot
 var express = require("express");
@@ -9,6 +12,7 @@ var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 var parseurl = require('parseurl');
 var fs = require("fs");
+var utf8=require('utf8');
 var {WebhookClient} = require('dialogflow-fulfillment');
 
 
@@ -309,9 +313,11 @@ function leggiSessione(path, strSessione){
   let out='';
   let sessionId = agent.sessionId /*.split('/').pop()*/;
   console.log('dentro call ava il mio session id '+sessionId);
-  var str= agent.parameters.searchText; //req.body.queryResult.parameters.searchText; //req.body.searchText;
+  //modifica del 02/12/2018 per bug utf8
+  // faccio encoding in utf8-> utf8.encode()
+  var str= utf8.encode(agent.parameters.searchText); //req.body.queryResult.parameters.searchText; //req.body.searchText;
   if (str) {
-    strRicerca=querystring.escape(str);
+    strRicerca=querystring.escape(str); //02/12/2018: questo rimane, escape della stringa ci vuole cmq!
     options.path+=strRicerca+'&user=&pwd=&ava='+bot;
   }
 

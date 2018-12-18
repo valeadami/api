@@ -79,7 +79,7 @@ http://86.107.98.69:8080/AVA/avatar.jsp?ava=Olivia
 function WebhookProcessing(req, res) {
   const agent = new WebhookClient({request: req, response: res});
   //recupero la sessionId della conversazione
-  console.log('Request ' + JSON.stringify(req) + '\n response ' + JSON.stringify(res));
+  
   agent.sessionId=req.body.session.split('/').pop();
 //assegno all'agente il parametro di ricerca da invare sotto forma di searchText a Panloquacity
   agent.parameters['searchText']=req.body.queryResult.parameters.searchText;
@@ -407,7 +407,7 @@ function leggiSessione(path, strSessione){
         
             //resolve(strOutput); <--- OLD 
             //18/12/2018
-            let comandi=[];
+            /*let comandi=[];
             comandi=getComandi(c.output[0].commands);
            if (typeof comandi!=='undefined' && comandi.length>=1) {
               console.log('ho almeno un comando, quindi prosegui con l\' azione ');
@@ -429,12 +429,11 @@ function leggiSessione(path, strSessione){
               
               console.log('non ci sono comandi, prosegui');
             }
-       /*** fine modifiche 18/12/2018 */
-
+      
           
-          agent.add(conv);
+          agent.add(conv);*/
           /**********fino qua  */    
-          //agent.add(strOutput); NEW 
+          agent.add(strOutput); //NEW 
           resolve(agent);
             
           

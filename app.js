@@ -79,6 +79,7 @@ http://86.107.98.69:8080/AVA/avatar.jsp?ava=Olivia
 function WebhookProcessing(req, res) {
   const agent = new WebhookClient({request: req, response: res});
   //recupero la sessionId della conversazione
+  console.log('Request ' + JSON.stringify(request) + '\n response ' + JSON.stringify(response));
   agent.sessionId=req.body.session.split('/').pop();
 //assegno all'agente il parametro di ricerca da invare sotto forma di searchText a Panloquacity
   agent.parameters['searchText']=req.body.queryResult.parameters.searchText;

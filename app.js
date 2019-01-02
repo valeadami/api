@@ -1,3 +1,4 @@
+//02/01/2019 conversation close con actions on google
 //18/12/2018
 //INIZIO ANALISI STOP CONVERSAZIONE DA PLQ, vedi anche file post.js
 
@@ -78,6 +79,9 @@ http://86.107.98.69:8080/AVA/avatar.jsp?ava=Olivia
 */
 function WebhookProcessing(req, res) {
   const agent = new WebhookClient({request: req, response: res});
+  //02/01/2019
+  agent.requestSource = agent.ACTIONS_ON_GOOGLE;
+  //******************************************* */
   //recupero la sessionId della conversazione
   
   agent.sessionId=req.body.session.split('/').pop();
@@ -406,8 +410,8 @@ function leggiSessione(path, strSessione){
             strOutput=strOutput.replace(/(<\/p>|<p>|<b>|<\/b>|<br>|<\/br>|<strong>|<\/strong>|<div>|<\/div>|<ul>|<li>|<\/ul>|<\/li>|&nbsp;|)/gi, '');
         
             //resolve(strOutput); <--- OLD 
-            //18/12/2018
-            /*let comandi=[];
+            //18/12/2018  02/01/2019
+            let comandi=[];
             comandi=getComandi(c.output[0].commands);
            if (typeof comandi!=='undefined' && comandi.length>=1) {
               console.log('ho almeno un comando, quindi prosegui con l\' azione ');
@@ -420,20 +424,24 @@ function leggiSessione(path, strSessione){
                     
                     conv.close(strOutput);
                     console.log(' ---- la conversazione DOPO CHIUSURA ----- ' + JSON.stringify(conv));
-              
+                    agent.add(conv);
                 }
                 if (typeof comandi[1] !== 'undefined' && comandi[0]=="STOP"){
                     console.log('+++++++++ stoppo la conversazione e mando link immagine')
-                }
+                    //02/01/2019
+                    agent.add(strOutput); //NEW 
+                  }
             } else {
-              
+               //02/01/2019
+              agent.add(strOutput); //NEW 
               console.log('non ci sono comandi, prosegui');
             }
       
           
-          agent.add(conv);*/
-          /**********fino qua  */    
-          agent.add(strOutput); //NEW 
+         
+          /**********fino qua gestione comandi 18/12/2018  */    
+
+          //agent.add(strOutput); //NEW 
           resolve(agent);
             
           

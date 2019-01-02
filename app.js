@@ -80,7 +80,8 @@ http://86.107.98.69:8080/AVA/avatar.jsp?ava=Olivia
 function WebhookProcessing(req, res) {
   const agent = new WebhookClient({request: req, response: res});
   //02/01/2019
-  agent.requestSource = agent.ACTIONS_ON_GOOGLE;
+  //agent.requestSource = agent.ACTIONS_ON_GOOGLE;
+  console.log('------ ----- la richiesta proviene da '+ agent.requestSource);
   //******************************************* */
   //recupero la sessionId della conversazione
   
@@ -425,7 +426,6 @@ function leggiSessione(path, strSessione){
                     conv.close(strOutput);
                     console.log(' ---- la conversazione DOPO CHIUSURA ----- ' + JSON.stringify(conv));
                     
-                    agent.add(strOutput); //02/01/2019 per webhook 
                     agent.add(conv);
                 }
                 if (typeof comandi[1] !== 'undefined' && comandi[0]=="STOP"){

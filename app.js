@@ -424,8 +424,9 @@ function leggiSessione(path, strSessione){
                     
                     conv.close(strOutput);
                     console.log(' ---- la conversazione DOPO CHIUSURA ----- ' + JSON.stringify(conv));
-                    agent.add(conv);
+                    
                     agent.add(strOutput); //02/01/2019 per webhook 
+                    agent.add(conv);
                 }
                 if (typeof comandi[1] !== 'undefined' && comandi[0]=="STOP"){
                     console.log('+++++++++ stoppo la conversazione e mando link immagine')

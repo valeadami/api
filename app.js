@@ -419,14 +419,25 @@ function leggiSessione(path, strSessione){
             
                 if (comandi[0]=="STOP"){
                     console.log('++++++++++++ stoppo la conversazione')
-                    let conv = agent.conv();
-          
-                    console.log(' ---- la conversazione PRIMA ----- ' + JSON.stringify(conv));
+                    //03/01/2019 
+                    //verifico che posso gestire la chiusura della conversazone
+                    if (agent.requestSource=="ACTIONS_ON_GOOGLE"){
+                      
+                      //agent.requestSource = agent.ACTIONS_ON_GOOGLE
+
+                      let conv = agent.conv();
+            
+                      console.log(' ---- la conversazione PRIMA ----- ' + JSON.stringify(conv));
+                      
+                      conv.close(strOutput);
+                      console.log(' ---- la conversazione DOPO CHIUSURA ----- ' + JSON.stringify(conv));
+                      
+                      agent.add(conv);
+                      //altrimenti ritorna la strOutput
+                    }else{
+                      agent.add(strOutput);
+                    }
                     
-                    conv.close(strOutput);
-                    console.log(' ---- la conversazione DOPO CHIUSURA ----- ' + JSON.stringify(conv));
-                    
-                    agent.add(conv);
                 }
                 if (typeof comandi[1] !== 'undefined' && comandi[0]=="STOP"){
                     console.log('+++++++++ stoppo la conversazione e mando link immagine')

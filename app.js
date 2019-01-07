@@ -415,7 +415,7 @@ function leggiSessione(path, strSessione){
             let comandi=[];
             comandi=getComandi(c.output[0].commands);
            if (typeof comandi!=='undefined' && comandi.length>=1) {
-              console.log('ho almeno un comando, quindi prosegui con l\' azione ');
+              console.log('ho almeno un comando, quindi prosegui con l\' azione ' + comandi[0]);
             
                 if (comandi[0]=="STOP"){
                     console.log('++++++++++++ stoppo la conversazione')
@@ -438,12 +438,17 @@ function leggiSessione(path, strSessione){
                       agent.add(strOutput);
                     }
                     
+                } else { //07/01/2019
+                  console.log('+++++++++ ho solo link immagine')
+                  //02/01/2019
+                  agent.add(strOutput); //ritorno il link immagine 
+
                 }
                 if (typeof comandi[1] !== 'undefined' && comandi[0]=="STOP"){
                     console.log('+++++++++ stoppo la conversazione e mando link immagine')
                     //02/01/2019
                     agent.add(strOutput); //NEW 
-                  }
+                } 
             } else {
                //02/01/2019
               agent.add(strOutput); //NEW 
